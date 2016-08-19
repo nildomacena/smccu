@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar>
+    <button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Denúncia SMCCU</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+
+    <ion-item>
+      <ion-label floating>Username</ion-label>
+      <ion-input type="text"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Password</ion-label>
+      <ion-input type="password"></ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <button (click)=goToTest() right >teste</button>
+  <button (click)= 'openDenuncia()' fab fab-bottom fab-right><ion-icon name="add"></ion-icon></button>
+
+
+</ion-content>
