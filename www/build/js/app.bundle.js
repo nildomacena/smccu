@@ -74,10 +74,11 @@ var DenunciaPage = (function () {
         this.viewController.dismiss();
     };
     DenunciaPage.prototype.goToMap = function () {
+        var _this = this;
         var mapModal = ionic_angular_1.Modal.create(map_1.MapPage);
         this.nav.present(mapModal);
         mapModal.onDismiss(function (data) {
-            console.log(data);
+            _this.address = "lat: " + data.lat + "\nlng: " + data.lng;
         });
     };
     DenunciaPage.prototype.takePicture = function () {

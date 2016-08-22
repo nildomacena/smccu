@@ -26,7 +26,7 @@ export class DenunciaPage {
     let mapModal = Modal.create(MapPage);
     this.nav.present(mapModal);    
     mapModal.onDismiss(data => {
-     console.log(data);
+     this.address = "lat: " + data.lat + "\nlng: "+data.lng;
    });
   }
 
