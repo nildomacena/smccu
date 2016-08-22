@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, ViewController, Alert } from 'ionic-angular';
+import { NavController, ViewController, Alert, Modal } from 'ionic-angular';
 import {Camera, Geolocation } from 'ionic-native';
 import {MapPage} from '../map/map';
+
 
 @Component({
   templateUrl: 'build/pages/denuncia/denuncia.html',
@@ -13,14 +14,20 @@ export class DenunciaPage {
   address: string;
   options:any = { };
   constructor(private nav:NavController, private viewController: ViewController) {
+
   }
+
   dismiss(){
     this.viewController.dismiss();
   }
 
 
   goToMap(){
-    this.nav.push(MapPage);
+    let mapModal = Modal.create(MapPage);
+    this.nav.present(mapModal);    
+    mapModal.onDismiss(data => {
+     console.log(data);
+   });
   }
 
   takePicture(){
