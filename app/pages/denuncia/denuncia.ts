@@ -3,6 +3,7 @@ import { NavController, ViewController, Alert, Modal } from 'ionic-angular';
 import {Camera, Geolocation } from 'ionic-native';
 import {MapPage} from '../map/map';
 
+declare var google: any;
 
 @Component({
   templateUrl: 'build/pages/denuncia/denuncia.html',
@@ -26,8 +27,26 @@ export class DenunciaPage {
     let mapModal = Modal.create(MapPage);
     this.nav.present(mapModal);    
     mapModal.onDismiss(data => {
-     this.address = "lat: " + data.lat + "\nlng: "+data.lng;
+      this.getAdress(data);
    });
+  }
+
+  getAdress(data){
+    let latLng = new google.maps.LatLng(data.lat, data.lng);
+    let geocoder = new google.maps.Geocoder;
+    geocoder.geocode({location : latLng}, (results, status) => {
+      if(status === google.maps.GeocoderStatus.OK){
+        if(results[0]){
+          console.log(results[0]);
+          this.setAdress(results[0].formatted_address);
+        }
+      }
+    });
+  }
+
+  setAdress(address: string){
+    this.address = address;
+    console.log(this.address);
   }
 
   takePicture(){

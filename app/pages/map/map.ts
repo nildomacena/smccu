@@ -19,11 +19,7 @@ export class MapPage {
       this.setMap(resp.coords.latitude, resp.coords.longitude);
     });
   }
-/*
-  função para obter o endereço formatado
-  getAddress(){
-    let geocoder = new google.maps.Geocoder();
-  }*/
+
   setMap(lat, lng){
     let latLng = new google.maps.LatLng(lat, lng);
     let mapOptions = {
