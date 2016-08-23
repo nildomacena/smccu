@@ -57,7 +57,10 @@ export class MapPage {
         console.log(this.markers[0].position.lat());
       }    
     }
-
+    dismiss(){
+      this.viewController.dismiss();
+    }
+    
     backToDenuncia(){
        let lastMarker = this.markers.length - 1;
        let latLng = {

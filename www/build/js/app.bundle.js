@@ -69,6 +69,7 @@ var DenunciaPage = (function () {
     function DenunciaPage(nav, viewController) {
         this.nav = nav;
         this.viewController = viewController;
+        this.address = "";
         this.options = {};
     }
     DenunciaPage.prototype.dismiss = function () {
@@ -79,7 +80,8 @@ var DenunciaPage = (function () {
         var mapModal = ionic_angular_1.Modal.create(map_1.MapPage);
         this.nav.present(mapModal);
         mapModal.onDismiss(function (data) {
-            _this.getAdress(data);
+            if (data)
+                _this.getAdress(data);
         });
     };
     DenunciaPage.prototype.getAdress = function (data) {
@@ -90,7 +92,7 @@ var DenunciaPage = (function () {
             if (status === google.maps.GeocoderStatus.OK) {
                 if (results[0]) {
                     console.log(results[0]);
-                    _this.setAdress(results[0].formatted_address);
+                    _this.address = results[0].formatted_address;
                 }
             }
         });
@@ -271,6 +273,9 @@ var MapPage = (function () {
             this.markers[lastMarker + 1].setMap(map);
             console.log(this.markers[0].position.lat());
         }
+    };
+    MapPage.prototype.dismiss = function () {
+        this.viewController.dismiss();
     };
     MapPage.prototype.backToDenuncia = function () {
         var lastMarker = this.markers.length - 1;

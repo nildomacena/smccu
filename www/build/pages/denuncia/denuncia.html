@@ -40,7 +40,8 @@
 
     <ion-item>
       <ion-label floating>Endereço</ion-label>
-      <ion-textarea required [(ngModel)]="address" ></ion-textarea>
+
+        <ion-textarea [(ngModel)]="address" #addressTextArea required ></ion-textarea>
     </ion-item>
     <ion-item>
       

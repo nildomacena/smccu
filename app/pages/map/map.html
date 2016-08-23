@@ -5,12 +5,20 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>teste2</ion-title>
-  </ion-navbar>
-
+  <ion-toolbar>
+    <ion-title>
+      Mapa
+    </ion-title>
+    <ion-buttons start>
+      <button (click)="dismiss()">
+        <span primary showWhen="ios">Cancel</span>
+        <ion-icon name="close" showWhen="android,windows"></ion-icon>
+        <ion-icon name="close" showWhen="core"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
+
 
 
 <ion-content>

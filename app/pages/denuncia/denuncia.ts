@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer } from '@angular/core';
 import { NavController, ViewController, Alert, Modal } from 'ionic-angular';
 import {Camera, Geolocation } from 'ionic-native';
 import {MapPage} from '../map/map';
@@ -12,8 +12,9 @@ export class DenunciaPage {
 
   title: string;
   description: string;
-  address: string;
+  address: string = "";
   options:any = { };
+  element:any;
   constructor(private nav:NavController, private viewController: ViewController) {
 
   }
@@ -27,7 +28,8 @@ export class DenunciaPage {
     let mapModal = Modal.create(MapPage);
     this.nav.present(mapModal);    
     mapModal.onDismiss(data => {
-      this.getAdress(data);
+      if(data)
+        this.getAdress(data);
    });
   }
 
@@ -38,7 +40,7 @@ export class DenunciaPage {
       if(status === google.maps.GeocoderStatus.OK){
         if(results[0]){
           console.log(results[0]);
-          this.setAdress(results[0].formatted_address);
+          this.address = results[0].formatted_address;
         }
       }
     });
