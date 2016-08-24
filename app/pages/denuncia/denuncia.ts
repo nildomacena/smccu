@@ -15,6 +15,7 @@ export class DenunciaPage {
   address: string = "";
   options:any = { };
   element:any;
+  btnAtualiza: boolean = false;
   constructor(private nav:NavController, private viewController: ViewController) {
 
   }
@@ -39,13 +40,22 @@ export class DenunciaPage {
     geocoder.geocode({location : latLng}, (results, status) => {
       if(status === google.maps.GeocoderStatus.OK){
         if(results[0]){
-          console.log(results[0]);
           this.address = results[0].formatted_address;
+          setTimeout(()=>{ 
+            this.atualiza();
+            console.log(results[0].formatted_address);
+          }, 200);
+          
         }
       }
     });
   }
 
+  atualiza(){
+    document.getElementById("button").click();
+
+
+  }
   setAdress(address: string){
     this.address = address;
     console.log(this.address);
