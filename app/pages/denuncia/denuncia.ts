@@ -21,25 +21,30 @@ export class DenunciaPage {
   btnAtualiza: boolean = false;
   catSelected:any;
   database:any;
-  constructor(private nav:NavController, private viewController: ViewController, private fire: Fire) {
-    this.database = this.fire.database;
-  
+  constructor(private nav:NavController, private viewController: ViewController, private fire: Fire) {  
   }
 
   ionViewLoaded(){
-    
-    this.categorias = this.fire.getCategorias();
-    console.log( " categorias loaded: ", this.categorias);
+    let teste;
+    console.log("entrou no ionview");
+    teste = this.fire.getCategorias();
+    console.log(teste);
   }
-  categoria(){
-    this.categorias = this.fire.getCategorias();
+  setCategorias(categorias){
+    console.log("categorias setcategorias:", categorias);
+    this.categorias = categorias;
     console.log(this.categorias);
   }
+
   dismiss(){
     this.viewController.dismiss();
   }
 
-
+  consoleCategoria(){
+    this.fire.getCategorias();
+    
+    
+  }
   goToMap(){
     let mapModal = Modal.create(MapPage);
     this.nav.present(mapModal);    
