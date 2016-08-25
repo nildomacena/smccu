@@ -17,8 +17,10 @@ export class Fire {
 		    databaseURL: "https://smccu-1384.firebaseio.com",
 		    storageBucket: "smccu-1384.appspot.com",
   		};
-		firebase.initializeApp(config);	
-		
+		firebase.initializeApp(config);			
+		firebase.database().ref('categorias/').on('value', (snapshot) => {
+			this.categorias = snapshot.val();
+		});
 
 	}	
 
@@ -27,9 +29,7 @@ export class Fire {
 		return data;
 	}
 	getCategorias(){
-		
-		firebase.database().ref('categorias/').on('value', (snapshot) => 
-			console.log("foi")).then(snapshot => console.log("entrou no then"));
+		return this.categorias;
 		
 	}
 }

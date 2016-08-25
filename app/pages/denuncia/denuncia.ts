@@ -41,7 +41,9 @@ export class DenunciaPage {
   }
 
   consoleCategoria(){
-    this.fire.getCategorias();
+
+    this.categorias = this.fire.getCategorias();
+    console.log(this.categorias);
     
     
   }
