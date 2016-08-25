@@ -27,10 +27,14 @@ export class DenunciaPage {
   }
 
   ionViewLoaded(){
+    
     this.categorias = this.fire.getCategorias();
-    console.log("categorias: "+this.categorias);
+    console.log( " categorias loaded: ", this.categorias);
   }
-
+  categoria(){
+    this.categorias = this.fire.getCategorias();
+    console.log(this.categorias);
+  }
   dismiss(){
     this.viewController.dismiss();
   }
