@@ -2,9 +2,10 @@ import { Component, ElementRef, Renderer } from '@angular/core';
 import { NavController, ViewController, Alert, Modal } from 'ionic-angular';
 import {Camera, Geolocation } from 'ionic-native';
 import {MapPage} from '../map/map';
+import {Fire} from '../../util/fire';
 
 declare var google: any;
-
+declare var firebase: any;
 @Component({
   templateUrl: 'build/pages/denuncia/denuncia.html',
 })
@@ -15,16 +16,34 @@ export class DenunciaPage {
   address: string = "";
   options:any = { };
   element:any;
+  mockCat: string[] = ['Terreno abandonado', 'Obra', 'blabla', 'teste2'];
+  categorias: any;
   btnAtualiza: boolean = false;
-  constructor(private nav:NavController, private viewController: ViewController) {
+  catSelected:any;
+  database:any;
+  constructor(private nav:NavController, private viewController: ViewController, private fire: Fire) {  
+  }
 
+  ionViewLoaded(){
+    this.fire.getCategorias().on('value', snapshot => {
+      this.categorias = snapshot.val();
+    });
+    /*this.fire.getCategorias().then(data => {
+      this.categorias = data.val();
+    });*/
   }
 
   dismiss(){
     this.viewController.dismiss();
   }
 
+  consoleCategoria(){
 
+    this.categorias = this.fire.getCategorias();
+    console.log(this.categorias);
+    
+    
+  }
   goToMap(){
     let mapModal = Modal.create(MapPage);
     this.nav.present(mapModal);    
@@ -90,7 +109,7 @@ export class DenunciaPage {
      let confirm = Alert.create({
       title: 'Confirmar denúncia',
       message: 'Deseja confirmar a denúncia com os seguintes dados?<br>Título: '+this.title+'<br>Descrição: '+this.description
-       +'<br>Endereço: '+this.address,
+       +'<br>Endereço: '+this.address+'<br>Categoria da denúncia: '+this.catSelected,
       buttons: [
         {
           text: 'Cancelar',
@@ -122,7 +141,7 @@ export class DenunciaPage {
         {
           text: 'OK',
           handler: () => {
-            console.log('Agree clicked');
+            this.viewController.dismiss();
           } 
         }]
      })

@@ -44,7 +44,10 @@
         <ion-textarea [(ngModel)]="address" id="lblAddress" required ></ion-textarea>
     </ion-item>
     <ion-item>
-      
+      <ion-label>Selecione uma categoria</ion-label>
+      <ion-select [(ngModel)]="catSelected" >
+        <ion-option *ngFor= "let cat of categorias">{{cat.name}}</ion-option>
+      </ion-select>
     </ion-item>
   </ion-list>
   <button style = "width: 0px; height: 0px " (click)="atualiza()" id="button" >Atualiza</button>

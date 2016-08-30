@@ -4,6 +4,7 @@ import {StatusBar} from 'ionic-native';
 import {HomePage} from './pages/home/home';
 import {TestePage} from './pages/teste/teste';
 import {DenunciaPage} from './pages/denuncia/denuncia';
+import {Fire} from './util/fire';
 
 @Component({
   templateUrl: 'build/app.html'
@@ -32,4 +33,4 @@ export class MyApp {
   
 }
 
-ionicBootstrap(MyApp);
+ionicBootstrap(MyApp, [Fire]);
