@@ -78,15 +78,13 @@ var DenunciaPage = (function () {
         this.btnAtualiza = false;
     }
     DenunciaPage.prototype.ionViewLoaded = function () {
-        var teste;
-        console.log("entrou no ionview");
-        teste = this.fire.getCategorias();
-        console.log(teste);
-    };
-    DenunciaPage.prototype.setCategorias = function (categorias) {
-        console.log("categorias setcategorias:", categorias);
-        this.categorias = categorias;
-        console.log(this.categorias);
+        var _this = this;
+        this.fire.getCategorias().on('value', function (snapshot) {
+            _this.categorias = snapshot.val();
+        });
+        /*this.fire.getCategorias().then(data => {
+          this.categorias = data.val();
+        });*/
     };
     DenunciaPage.prototype.dismiss = function () {
         this.viewController.dismiss();
@@ -369,7 +367,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var Fire = (function () {
     function Fire() {
-        var _this = this;
         var config = {
             apiKey: "AIzaSyC9SGdtW-cm43WWHzu1SiLxXeU1d_-KQbE",
             authDomain: "smccu-1384.firebaseapp.com",
@@ -377,16 +374,10 @@ var Fire = (function () {
             storageBucket: "smccu-1384.appspot.com",
         };
         firebase.initializeApp(config);
-        firebase.database().ref('categorias/').on('value', function (snapshot) {
-            _this.categorias = snapshot.val();
-        });
     }
-    Fire.prototype.resolveCategorias = function (data) {
-        console.log("data: ", data);
-        return data;
-    };
     Fire.prototype.getCategorias = function () {
-        return this.categorias;
+        return firebase.database().ref('categorias/');
+        //return 	firebase.database().ref('categorias/').once('value');
     };
     Fire = __decorate([
         core_1.Injectable(), 

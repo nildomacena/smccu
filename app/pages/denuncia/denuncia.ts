@@ -25,15 +25,12 @@ export class DenunciaPage {
   }
 
   ionViewLoaded(){
-    let teste;
-    console.log("entrou no ionview");
-    teste = this.fire.getCategorias();
-    console.log(teste);
-  }
-  setCategorias(categorias){
-    console.log("categorias setcategorias:", categorias);
-    this.categorias = categorias;
-    console.log(this.categorias);
+    this.fire.getCategorias().on('value', snapshot => {
+      this.categorias = snapshot.val();
+    });
+    /*this.fire.getCategorias().then(data => {
+      this.categorias = data.val();
+    });*/
   }
 
   dismiss(){
