@@ -54,7 +54,6 @@ export class MapPage {
         this.markers[lastMarker].setMap(null);
         this.markers.push(marker);
         this.markers[lastMarker + 1].setMap(map); 
-        console.log(this.markers[0].position.lat());
       }    
     }
     dismiss(){

@@ -5,7 +5,7 @@ import {MapPage} from '../map/map';
 import {Fire} from '../../util/fire';
 
 declare var google: any;
-declare var firebase: any;
+
 @Component({
   templateUrl: 'build/pages/denuncia/denuncia.html',
 })
@@ -13,14 +13,18 @@ export class DenunciaPage {
 
   title: string;
   description: string;
-  address: string = "";
   options:any = { };
   element:any;
-  mockCat: string[] = ['Terreno abandonado', 'Obra', 'blabla', 'teste2'];
   categorias: any;
-  btnAtualiza: boolean = false;
   catSelected:any;
-  database:any;
+
+  address = {
+    numero: "",
+    logradouro: "",
+    bairro: "",
+    cep: "",
+    enderecoFormatado: ""
+  };
   constructor(private nav:NavController, private viewController: ViewController, private fire: Fire) {  
   }
 
@@ -33,17 +37,13 @@ export class DenunciaPage {
     });*/
   }
 
+  //Fecha o modal
   dismiss(){
     this.viewController.dismiss();
   }
 
-  consoleCategoria(){
 
-    this.categorias = this.fire.getCategorias();
-    console.log(this.categorias);
-    
-    
-  }
+  //Cria um modal para o mapa e ao fechar esse modal traz os dados para a páginad de denúncia
   goToMap(){
     let mapModal = Modal.create(MapPage);
     this.nav.present(mapModal);    
@@ -53,15 +53,22 @@ export class DenunciaPage {
    });
   }
 
+
+  //Recebe os dados da localização (lat, lng) do usuário e formata o endereço
   getAdress(data){
     let latLng = new google.maps.LatLng(data.lat, data.lng);
     let geocoder = new google.maps.Geocoder;
     geocoder.geocode({location : latLng}, (results, status) => {
       if(status === google.maps.GeocoderStatus.OK){
         if(results[0]){
-          this.address = results[0].formatted_address;
+          this.address.numero = results[0].address_components[0].long_name;
+          this.address.logradouro = results[0].address_components[1].short_name;
+          this.address.bairro = results[0].address_components[2].long_name;
+          this.address.cep = results[0].address_components[7].long_name;
+          this.address.enderecoFormatado = results[0].formatted_address;
+          console.log(this.address);
           setTimeout(()=>{ 
-            this.atualiza();
+            document.getElementById("button").click();
             console.log(results[0].formatted_address);
           }, 200);
           
@@ -70,16 +77,8 @@ export class DenunciaPage {
     });
   }
 
-  atualiza(){
-    document.getElementById("button").click();
 
-
-  }
-  setAdress(address: string){
-    this.address = address;
-    console.log(this.address);
-  }
-
+  //tira as fotos do local
   takePicture(){
     Camera.getPicture(this.options).then((imageData) => {
     // imageData is either a base64 encoded string or a file URI
@@ -90,6 +89,8 @@ export class DenunciaPage {
     });
   }
 
+
+  //Chamada quando o botão de salvar é clicado
   save(){
     if(!this.address || !this.description || !this.title){
       let alert = Alert.create({
@@ -109,7 +110,7 @@ export class DenunciaPage {
      let confirm = Alert.create({
       title: 'Confirmar denúncia',
       message: 'Deseja confirmar a denúncia com os seguintes dados?<br>Título: '+this.title+'<br>Descrição: '+this.description
-       +'<br>Endereço: '+this.address+'<br>Categoria da denúncia: '+this.catSelected,
+       +'<br>Endereço: '+this.address.enderecoFormatado+'<br>Categoria da denúncia: '+this.catSelected,
       buttons: [
         {
           text: 'Cancelar',
@@ -128,6 +129,9 @@ export class DenunciaPage {
       this.nav.present(confirm);     
     }
   }
+
+  //Caso todas as informações sejam preechidas corretamente essa função abre um alerta 
+  //onde será possível para o usuário colocar seu email e receber alguma informação sobre a denúncia
   alertSuccess(){
     let alert = Alert.create({
       title: 'Denúncia Registrada com sucesso',
