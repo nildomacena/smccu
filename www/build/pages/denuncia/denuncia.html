@@ -41,7 +41,7 @@
     <ion-item>
       <ion-label floating>Endereço</ion-label>
 
-        <ion-textarea [(ngModel)]="address" id="lblAddress" required ></ion-textarea>
+        <ion-textarea [(ngModel)]="address.enderecoFormatado" id="lblAddress" required ></ion-textarea>
     </ion-item>
     <ion-item>
       <ion-label>Selecione uma categoria</ion-label>
@@ -50,7 +50,7 @@
       </ion-select>
     </ion-item>
   </ion-list>
-  <button style = "width: 0px; height: 0px " (click)="atualiza()" id="button" >Atualiza</button>
+  <button style = "width: 0px; height: 0px " id="button" >Atualiza</button>
   <button (click)="takePicture()" full >Tirar Foto</button>
   <button (click)="save()" full>Salvar</button>
   <button clear full (click)="goToMap()" >Ir para o mapa</button>
