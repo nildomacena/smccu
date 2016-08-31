@@ -99,7 +99,7 @@ export class DenunciaPage {
         {
           text: 'OK',
           handler: () => {
-            this.goToMap();
+            alert.dismiss();
           } 
         }]
       });
