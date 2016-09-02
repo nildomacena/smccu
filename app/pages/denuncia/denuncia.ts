@@ -32,9 +32,6 @@ export class DenunciaPage {
     this.fire.getCategorias().on('value', snapshot => {
       this.categorias = snapshot.val();
     });
-    /*this.fire.getCategorias().then(data => {
-      this.categorias = data.val();
-    });*/
   }
 
   //Fecha o modal
