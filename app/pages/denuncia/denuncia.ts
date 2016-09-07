@@ -7,18 +7,18 @@ import { Fire, Denuncia } from '../../util';
 declare var google: any;
 
 @Component({
-  templateUrl: 'build/pages/denuncia/denunciaPage.html',
+  templateUrl: 'build/pages/denuncia/denuncia.html',
 })
 
 export class DenunciaPage {
 
-  denuncia: Denuncia;
+  denuncia: Denuncia = new Denuncia();
   description: string;
   options:any = { };
   element:any;
   categorias: any;
   catSelected:any;
-
+  endereco:any;
   address = {
     numero: "",
     logradouro: "",
@@ -48,10 +48,10 @@ export class DenunciaPage {
     this.nav.present(mapModal);    
     mapModal.onDismiss(data => {
       if(data)
-        //this.denuncia.setLatLng(data);
-        //
-        console.log("data: " +data);
-        this.getAdress(data);
+        this.denuncia.setLatLng(data);
+        
+        //console.log(data);
+        this.getAddress();
    });
   }
 
@@ -60,8 +60,16 @@ export class DenunciaPage {
 
   }
 
+  getAddress(){
+    this.denuncia.getAddress().then( result => {
+        this.endereco = result;
+      }
+    );
+
+  }
+
   //Recebe os dados da localização (lat, lng) do usuário e formata o endereço
-  getAdress(data){
+  /*getAddress(data){
     let latLng = new google.maps.LatLng(data.lat, data.lng);
     let geocoder = new google.maps.Geocoder;
     geocoder.geocode({location : latLng}, (results, status) => {
@@ -75,12 +83,11 @@ export class DenunciaPage {
           console.log(this.address);
           setTimeout(()=>{ 
             document.getElementById("button").click();
-            console.log(results[0].formatted_address);
           }, 200);         
         }
       }
     });
-  }
+  }*/
 
 
   //tira as fotos do local
