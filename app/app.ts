@@ -3,7 +3,7 @@ import {Modal, Platform, ionicBootstrap, Nav, MenuController} from 'ionic-angula
 import {StatusBar} from 'ionic-native';
 import {HomePage} from './pages/home/home';
 import {TestePage} from './pages/teste/teste';
-import {DenunciaPage} from './pages/denuncia/denuncia';
+import {DenunciaPage} from './pages/denuncia';
 import {Fire} from './util/fire';
 
 @Component({

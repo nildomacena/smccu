@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Modal, NavController} from 'ionic-angular';
 import {MapPage} from '../map/map'
-import {DenunciaPage} from '../denuncia/denuncia'
+import {DenunciaPage} from '../denuncia';
 
 @Component({
   templateUrl: 'build/pages/home/home.html'

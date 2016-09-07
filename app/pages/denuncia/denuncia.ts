@@ -1,17 +1,18 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
 import { NavController, ViewController, Alert, Modal } from 'ionic-angular';
-import {Camera, Geolocation } from 'ionic-native';
-import {MapPage} from '../map/map';
-import {Fire} from '../../util/fire';
+import { Camera, Geolocation } from 'ionic-native';
+import { MapPage } from '../map/map';
+import { Fire, Denuncia } from '../../util';
 
 declare var google: any;
 
 @Component({
-  templateUrl: 'build/pages/denuncia/denuncia.html',
+  templateUrl: 'build/pages/denuncia/denunciaPage.html',
 })
+
 export class DenunciaPage {
 
-  title: string;
+  denuncia: Denuncia;
   description: string;
   options:any = { };
   element:any;
@@ -25,6 +26,7 @@ export class DenunciaPage {
     cep: "",
     enderecoFormatado: ""
   };
+
   constructor(private nav:NavController, private viewController: ViewController, private fire: Fire) {  
   }
 
@@ -46,10 +48,17 @@ export class DenunciaPage {
     this.nav.present(mapModal);    
     mapModal.onDismiss(data => {
       if(data)
+        //this.denuncia.setLatLng(data);
+        //
+        console.log("data: " +data);
         this.getAdress(data);
    });
   }
 
+
+  formatAddress(){
+
+  }
 
   //Recebe os dados da localização (lat, lng) do usuário e formata o endereço
   getAdress(data){
@@ -67,8 +76,7 @@ export class DenunciaPage {
           setTimeout(()=>{ 
             document.getElementById("button").click();
             console.log(results[0].formatted_address);
-          }, 200);
-          
+          }, 200);         
         }
       }
     });
@@ -89,7 +97,7 @@ export class DenunciaPage {
 
   //Chamada quando o botão de salvar é clicado
   save(){
-    if(!this.address || !this.description || !this.title){
+    if(!this.address || !this.description){
       let alert = Alert.create({
         title: 'Dados incompletos',
         subTitle: 'Por favor, complete o formulário com os dados obrigatórios',
@@ -106,7 +114,7 @@ export class DenunciaPage {
     else{
      let confirm = Alert.create({
       title: 'Confirmar denúncia',
-      message: 'Deseja confirmar a denúncia com os seguintes dados?<br>Título: '+this.title+'<br>Descrição: '+this.description
+      message: 'Deseja confirmar a denúncia com os seguintes dados?<br>Descrição: '+this.description
        +'<br>Endereço: '+this.address.enderecoFormatado+'<br>Categoria da denúncia: '+this.catSelected,
       buttons: [
         {
