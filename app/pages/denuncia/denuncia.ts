@@ -56,39 +56,26 @@ export class DenunciaPage {
   }
 
 
-  formatAddress(){
-
+  formatAddress(endereco){
+    this.address.numero = endereco.address_components[0].long_name;
+    this.address.logradouro = endereco.address_components[1].short_name;
+    this.address.bairro = endereco.address_components[2].long_name;
+    this.address.cep = endereco.address_components[7].long_name;
+    this.address.enderecoFormatado = endereco.formatted_address;
+    console.log(this.address);
+    setTimeout(()=>{ 
+      document.getElementById("button").click();
+    }, 200);
   }
 
   getAddress(){
     this.denuncia.getAddress().then( result => {
+        this.formatAddress(result);
         this.endereco = result;
       }
     );
 
   }
-
-  //Recebe os dados da localização (lat, lng) do usuário e formata o endereço
-  /*getAddress(data){
-    let latLng = new google.maps.LatLng(data.lat, data.lng);
-    let geocoder = new google.maps.Geocoder;
-    geocoder.geocode({location : latLng}, (results, status) => {
-      if(status === google.maps.GeocoderStatus.OK){
-        if(results[0]){
-          this.address.numero = results[0].address_components[0].long_name;
-          this.address.logradouro = results[0].address_components[1].short_name;
-          this.address.bairro = results[0].address_components[2].long_name;
-          this.address.cep = results[0].address_components[7].long_name;
-          this.address.enderecoFormatado = results[0].formatted_address;
-          console.log(this.address);
-          setTimeout(()=>{ 
-            document.getElementById("button").click();
-          }, 200);         
-        }
-      }
-    });
-  }*/
-
 
   //tira as fotos do local
   takePicture(){
