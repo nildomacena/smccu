@@ -10,21 +10,20 @@
 
 <ion-content padding>
 
-  <ion-list>
-    <ion-item>
-      <ion-label floating>Username</ion-label>
-      <ion-input type="text"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label floating>Password</ion-label>
-      <ion-input type="password"></ion-input>
-    </ion-item>
-
-  </ion-list>
-
-  <button (click)=goToTest() right >teste</button>
-  <button (click)= 'openDenuncia()' fab fab-bottom fab-right><ion-icon name="add"></ion-icon></button>
-
-
+  <ion-card>
+    <ion-card-header>
+      <b>Bem-Vindo</b>
+    </ion-card-header>
+    <ion-card-content>
+      Bem-vindo ao SMCCUapp. Um aplicativo onde você pode registrar denúncias junto à Superintendência Municipal de Controle e Convívio Urbano de Maceió.
+      Clique no botão abaixo para registrar uma denúncia.
+    </ion-card-content>
+  </ion-card>
+  <ion-grid>
+    <ion-row>
+      <ion-col width-80 offset-10>
+        <button block (click)="openDenuncia()">Registrar Denúncia</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

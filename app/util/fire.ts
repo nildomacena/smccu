@@ -1,5 +1,6 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable'
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Denuncia } from './';
 
 declare var firebase: any;
 
@@ -21,8 +22,10 @@ export class Fire {
 	}	
 
 	getCategorias(){
-		return firebase.database().ref('categorias/');
-		//return 	firebase.database().ref('categorias/').once('value');
-		
+		return firebase.database().ref('categorias/');		
+	}
+
+	saveDenuncia(denuncia: Denuncia){
+		firebase.database().ref().child('denuncias/').push(denuncia);
 	}
 }

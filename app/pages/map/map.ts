@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, ViewController, NavParams, Alert } from 'ionic-angular';
-import { Geolocation} from 'ionic-native';
+import { Geolocation, Diagnostic} from 'ionic-native';
 
 declare var google: any;
-
+declare var cordova:any;
 @Component({
   templateUrl: 'build/pages/map/map.html',
 })
@@ -15,11 +15,14 @@ export class MapPage {
   }
   
   ionViewLoaded(){
-    Geolocation.getCurrentPosition().then((resp) => { 
-      this.setMap(resp.coords.latitude, resp.coords.longitude);
-    });
+    this.getPosition();    
   }
 
+  getPosition(){
+    Geolocation.getCurrentPosition().then((resp) => { 
+    this.setMap(resp.coords.latitude, resp.coords.longitude);
+    });
+  }
   setMap(lat, lng){
     let latLng = new google.maps.LatLng(lat, lng);
     let mapOptions = {

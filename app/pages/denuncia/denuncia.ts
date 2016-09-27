@@ -1,11 +1,11 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
-import { NavController, ViewController, Alert, Modal } from 'ionic-angular';
-import { Camera, Geolocation } from 'ionic-native';
+import { NavController, ViewController, Alert, AlertInputOptions ,  Modal, Platform } from 'ionic-angular';
+import { Camera, Geolocation, Diagnostic} from 'ionic-native';
 import { MapPage } from '../map/map';
 import { Fire, Denuncia } from '../../util';
 
-declare var google: any;
-
+declare var google:  any;
+declare var cordova: any;
 @Component({
   templateUrl: 'build/pages/denuncia/denuncia.html',
 })
@@ -18,16 +18,19 @@ export class DenunciaPage {
   element:any;
   categorias: any;
   catSelected:any;
-  endereco:any;
+  //endereco:any;
+  images: string[];
   address = {
     numero: "",
     logradouro: "",
     bairro: "",
     cep: "",
-    enderecoFormatado: ""
-  };
+    enderecoFormatado: "",
+    pntRef: ""
+  }
 
-  constructor(private nav:NavController, private viewController: ViewController, private fire: Fire) {  
+  constructor(private platform: Platform, private nav:NavController, private viewController: ViewController, private fire: Fire) {
+    this.images = [];
   }
 
   ionViewLoaded(){
@@ -41,51 +44,185 @@ export class DenunciaPage {
     this.viewController.dismiss();
   }
 
+goToMap(){
+    let mapModal = Modal.create(MapPage);
+    Diagnostic.isGpsLocationEnabled()
+      .then(result => {  //Primeiro argumento é para o caso do GPS está habilitado
+        if(result){      // Result pode ser True ou False
+          this.nav.present(mapModal);    
+          mapModal.onDismiss(data => {
+            let alertPtRef = Alert.create({
+              title: 'Ponto de referência',
+              subTitle: 'Digite o ponto de referência',
+              inputs:[{
+                type: 'text',
+                name: 'referencia'
+              }],
+              buttons: [{
+                text: 'Ok',
+                handler: () => {
+                  alertPtRef.dismiss().then(value => {
+                    if(data){
+                      this.denuncia.setPosition(data, alertPtRef.data.inputs[0].value);
+                      this.getAddress();
+                    }
+                  })
+                }
+              }]
+            });
+            this.nav.present(alertPtRef);
+          });
+          
+        }
 
-  //Cria um modal para o mapa e ao fechar esse modal traz os dados para a páginad de denúncia
-  goToMap(){
+        else{
+          let alert = Alert.create({
+          title: 'O sinal de GPS está desabilitado',
+          subTitle: 'Deseja habilitar o GPS?',
+          buttons: [
+            {
+              text: 'Habilitar GPS',
+              handler: () => {
+                cordova.plugins.locationAccuracy.request(
+                  () => {
+                    this.nav.present(mapModal);    
+                    mapModal.onDismiss(data => {
+                      if(data){
+                        let alertPtRef = Alert.create({
+                          title: 'Ponto de referência',
+                          subTitle: 'Digite o ponto de referência da ocorrência',
+                          inputs:[{
+                            type: 'text',
+                            name: 'referencia' 
+                          }],
+                          buttons: [{
+                            text: 'Ok',
+                            handler: () => {
+                              alertPtRef.dismiss().then(value => {
+                                if(data){
+                                  this.denuncia.setPosition(data, alertPtRef.data.inputs[0].value);
+                                  this.getAddress();
+                                }
+                              })
+                            }
+                          }]
+                        });
+                        this.nav.present(alertPtRef);
+                      }
+                    });  
+                  },
+                  (error) => console.log("Something went wrong",error),
+                  cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY
+                );
+              } 
+            },
+            {
+              text: 'Cancelar',
+              handler: () => {
+                this.viewController.dismiss();
+              } 
+            }
+            ]
+          })
+          this.nav.present(alert);
+       }  
+      })
+      .catch(error => console.log(error))
+  }
+
+goToMapCore(){
     let mapModal = Modal.create(MapPage);
     this.nav.present(mapModal);    
     mapModal.onDismiss(data => {
-      if(data)
-        this.denuncia.setLatLng(data);
-        
-        //console.log(data);
-        this.getAddress();
-   });
-  }
 
-
-  formatAddress(endereco){
-    this.address.numero = endereco.address_components[0].long_name;
-    this.address.logradouro = endereco.address_components[1].short_name;
-    this.address.bairro = endereco.address_components[2].long_name;
-    this.address.cep = endereco.address_components[7].long_name;
-    this.address.enderecoFormatado = endereco.formatted_address;
-    console.log(this.address);
-    setTimeout(()=>{ 
-      document.getElementById("button").click();
-    }, 200);
-  }
-
+      let alert = Alert.create({
+        title: 'Ponto de referência',
+        subTitle: 'Digite o ponto de referência',
+        inputs:[{
+          type: 'text',
+          name: 'referencia'
+        }],
+        buttons: [{
+          text: 'Ok',
+          handler: () => {
+            alert.dismiss().then(value => {
+              if(data){
+                this.denuncia.setPosition(data, alert.data.inputs[0].value);
+                this.getAddress();
+              }
+            })
+          }
+        }]
+      });
+      this.nav.present(alert);
+    });
+}
+   
   getAddress(){
     this.denuncia.getAddress().then( result => {
         this.formatAddress(result);
-        this.endereco = result;
+        //this.endereco = result; Se tudo funcionar normal, apagar essa linha
       }
     );
 
   }
 
+  formatAddress(endereco){  //Esse parâmetro é um objeto contendo um json com os dados do Geocoder e o ponto de referência
+    if(endereco.endereco.address_components[4].long_name =! "Maceió"){
+      let alert = Alert.create({
+          title: 'Localização não permitida',
+          subTitle: 'Apenas serão recebidas denúncias para a área de Maceió',
+          buttons:[
+            {
+              text: 'OK',
+              handler: () => {
+                alert.dismiss();
+              }
+            }
+          ]
+      });
+      this.nav.present(alert);
+    }
+    else{ 
+      this.address.numero = endereco.endereco.address_components[0].long_name;
+      this.address.logradouro = endereco.endereco.address_components[1].short_name;
+      this.address.bairro = endereco.endereco.address_components[2].long_name;
+      this.address.cep = endereco.endereco.address_components[7].long_name;
+      this.address.pntRef = endereco.pntRef;
+      this.address.enderecoFormatado = endereco.endereco.address_components[1].short_name + ", "+endereco.endereco.address_components[2].long_name+".\nPonto de referência: "+this.address.pntRef;
+    }    
+  }
+
   //tira as fotos do local
   takePicture(){
-    Camera.getPicture(this.options).then((imageData) => {
-    // imageData is either a base64 encoded string or a file URI
-    // If it's base64:
-    let base64Image = 'data:image/jpeg;base64,' + imageData;
-    }, (err) => {
-    // Handle error
-    });
+    
+    if(this.images.length >= 4){
+      let alert = Alert.create({
+          title: 'Número máximo de fotos atinginda',
+          subTitle: 'Limite de 4 fotos por denúncia',
+          buttons:[
+            {
+              text: 'OK',
+              handler: () => {
+                alert.dismiss();
+              }
+            }
+          ]
+      });
+      this.nav.present(alert);
+    }
+
+    else{
+      Camera.getPicture({
+        sourceType: Camera.PictureSourceType.CAMERA,
+        destinationType: Camera.DestinationType.DATA_URL,
+        encodingType: Camera.EncodingType.JPEG,
+      }).then((imageData) => {
+      this.images.push('data:image/jpeg;base64,' + imageData);
+      }, (err) => {
+        console.log(err);
+      });
+    }
   }
 
 
@@ -148,6 +285,10 @@ export class DenunciaPage {
           } 
         }]
      })
+     console.log(alert.data);
     this.nav.present(alert);
+  }
+  onRemoveImage(i:number){
+    this.images.splice(i,1);
   }
 }
