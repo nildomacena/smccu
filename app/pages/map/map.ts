@@ -21,6 +21,7 @@ export class MapPage {
   getPosition(){
     Geolocation.getCurrentPosition().then((resp) => { 
     this.setMap(resp.coords.latitude, resp.coords.longitude);
+    let button = document.getElementById("btn_setMap").style.visibility = "visible"
     });
   }
   setMap(lat, lng){

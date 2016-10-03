@@ -32,8 +32,8 @@
   </ion-list>
   <button style = "width: 0px; height: 0px " id="button" >Atualiza</button>
   <button (click)="takePicture()" full >Anexar Fotos</button>
-  <button (click)="goToMap()" full >Ir para o mapa</button>
-  <button (click)="goToMapCore()" showWhen="mobileweb" full >Ir para o mapa</button>
+  <button (click)="goToMap()" showWhen="android, ios" full >Ir para o mapa</button>
+  <button (click)="goToMapCore()" full >Ir para o mapa</button>
   <button (click)="save()" full>Salvar</button>
     
     <ion-row>
