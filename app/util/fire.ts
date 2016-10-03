@@ -26,6 +26,9 @@ export class Fire {
 	}
 
 	saveDenuncia(denuncia: Denuncia){
+		console.log(denuncia);
 		firebase.database().ref().child('denuncias/').push(denuncia);
 	}
+
+
 }

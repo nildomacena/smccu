@@ -25,7 +25,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Selecione uma categoria</ion-label>
-      <ion-select [(ngModel)]="catSelected" >
+      <ion-select #select [(ngModel)]="catSelected" >
         <ion-option *ngFor= "let cat of categorias">{{cat.name}}</ion-option>
       </ion-select>
     </ion-item>

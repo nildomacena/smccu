@@ -18,7 +18,6 @@ export class DenunciaPage {
   element:any;
   categorias: any;
   catSelected:any;
-  //endereco:any;
   images: string[];
   address = {
     numero: "",
@@ -257,7 +256,7 @@ goToMapCore(){
         {
           text: 'Confirmar',
           handler: () => {
-            setTimeout(() => this.alertSuccess(), 2000); 
+            this.fire.saveDenuncia(this.denuncia)
           }
         }
       ]
