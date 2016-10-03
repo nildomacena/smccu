@@ -43,6 +43,48 @@ export class DenunciaPage {
     this.viewController.dismiss();
   }
 
+definePntRef(data){
+  let alert = Alert.create({
+    title: 'Ponto de referência',
+    subTitle: 'Digite o ponto de referência',
+    enableBackdropDismiss: false,
+    inputs:[{
+      type: 'text',
+      name: 'referencia'
+    }],
+    buttons: [{
+      text: 'Ok',
+      handler: () => {
+        alert.dismiss().then(() => {
+          if(alert.data.inputs[0].value){
+            console.log('entrou no if');
+            this.denuncia.setPosition(data, alert.data.inputs[0].value);
+            this.getAddress();
+          }
+          else{ //Se o usuário sair do alert sem digitar o ponto de referência, ele vai ser redirecionado para o mesmo local
+            let alertPntRef = Alert.create({
+              title: 'Ponto de referência inválido',
+              subTitle: 'O ponto de referência é obrigatório',
+              enableBackdropDismiss: false,
+              buttons: [{
+                text: 'Ok',
+                handler: () => alertPntRef.dismiss().then(() => {
+                  this.definePntRef(data);
+                })
+              }]
+            });          
+            console.log("Alertptref");
+            this.nav.present(alertPntRef);
+          }
+
+        })
+      }
+    }]
+  });
+  this.nav.present(alert);
+  alert.willUnload.next(console.log("Alert.data: ",alert.data));
+  //console.log("Saiu?: ", alert.didLeave);
+}
 goToMap(){
     let mapModal = Modal.create(MapPage);
     Diagnostic.isGpsLocationEnabled()
@@ -132,29 +174,32 @@ goToMap(){
 goToMapCore(){
     let mapModal = Modal.create(MapPage);
     this.nav.present(mapModal);    
-    mapModal.onDismiss(data => {
-
-      let alert = Alert.create({
-        title: 'Ponto de referência',
-        subTitle: 'Digite o ponto de referência',
-        inputs:[{
-          type: 'text',
-          name: 'referencia'
-        }],
-        buttons: [{
-          text: 'Ok',
-          handler: () => {
-            alert.dismiss().then(value => {
-              if(data){
-                this.denuncia.setPosition(data, alert.data.inputs[0].value);
-                this.getAddress();
-              }
-            })
-          }
-        }]
-      });
-      this.nav.present(alert);
-    });
+    mapModal.onDismiss(data => this.definePntRef(data));
+    
+    /* mapModal.onDismiss(data => {
+      if(data){ 
+        let alert = Alert.create({
+          title: 'Ponto de referência',
+          subTitle: 'Digite o ponto de referência',
+          inputs:[{
+            type: 'text',
+            name: 'referencia'
+          }],
+          buttons: [{
+            text: 'Ok',
+            handler: () => {
+              alert.dismiss().then(value => {
+                if(data){
+                  this.denuncia.setPosition(data, alert.data.inputs[0].value);
+                  this.getAddress();
+                }
+              })
+            }
+          }]
+        });
+        this.nav.present(alert);
+      }
+    }); */
 }
    
   getAddress(){
