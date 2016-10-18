@@ -92,30 +92,10 @@ goToMap(){
         if(result){      // Result pode ser True ou False
           this.nav.present(mapModal);    
           mapModal.onDismiss(data => {
-            let alertPtRef = Alert.create({
-              title: 'Ponto de referência',
-              subTitle: 'Digite o ponto de referência',
-              inputs:[{
-                type: 'text',
-                name: 'referencia'
-              }],
-              buttons: [{
-                text: 'Ok',
-                handler: () => {
-                  alertPtRef.dismiss().then(value => {
-                    if(data){
-                      this.denuncia.setPosition(data, alertPtRef.data.inputs[0].value);
-                      this.getAddress();
-                    }
-                  })
-                }
-              }]
-            });
-            this.nav.present(alertPtRef);
+            if (data)
+              this.definePntRef(data);
           });
-          
         }
-
         else{
           let alert = Alert.create({
           title: 'O sinal de GPS está desabilitado',
@@ -128,29 +108,9 @@ goToMap(){
                   () => {
                     this.nav.present(mapModal);    
                     mapModal.onDismiss(data => {
-                      if(data){
-                        let alertPtRef = Alert.create({
-                          title: 'Ponto de referência',
-                          subTitle: 'Digite o ponto de referência da ocorrência',
-                          inputs:[{
-                            type: 'text',
-                            name: 'referencia' 
-                          }],
-                          buttons: [{
-                            text: 'Ok',
-                            handler: () => {
-                              alertPtRef.dismiss().then(value => {
-                                if(data){
-                                  this.denuncia.setPosition(data, alertPtRef.data.inputs[0].value);
-                                  this.getAddress();
-                                }
-                              })
-                            }
-                          }]
-                        });
-                        this.nav.present(alertPtRef);
-                      }
-                    });  
+                      if (data)
+                        this.definePntRef(data);
+                    });
                   },
                   (error) => console.log("Something went wrong",error),
                   cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY
@@ -174,32 +134,10 @@ goToMap(){
 goToMapCore(){
     let mapModal = Modal.create(MapPage);
     this.nav.present(mapModal);    
-    mapModal.onDismiss(data => this.definePntRef(data));
-    
-    /* mapModal.onDismiss(data => {
-      if(data){ 
-        let alert = Alert.create({
-          title: 'Ponto de referência',
-          subTitle: 'Digite o ponto de referência',
-          inputs:[{
-            type: 'text',
-            name: 'referencia'
-          }],
-          buttons: [{
-            text: 'Ok',
-            handler: () => {
-              alert.dismiss().then(value => {
-                if(data){
-                  this.denuncia.setPosition(data, alert.data.inputs[0].value);
-                  this.getAddress();
-                }
-              })
-            }
-          }]
-        });
-        this.nav.present(alert);
-      }
-    }); */
+    mapModal.onDismiss(data => {
+      if (data)
+        this.definePntRef(data);
+    });
 }
    
   getAddress(){

@@ -24,7 +24,7 @@
       <ion-textarea [(ngModel)]="address.enderecoFormatado" id="lblAddress" required ></ion-textarea>
     </ion-item>
     <ion-item>
-      <ion-label>Selecione uma categoria</ion-label>
+      <ion-label *ngIf="!catSelected" >Selecione a categoria</ion-label>
       <ion-select #select [(ngModel)]="catSelected" >
         <ion-option *ngFor= "let cat of categorias">{{cat.name}}</ion-option>
       </ion-select>
@@ -32,8 +32,8 @@
   </ion-list>
   <button style = "width: 0px; height: 0px " id="button" >Atualiza</button>
   <button (click)="takePicture()" full >Anexar Fotos</button>
-  <button (click)="goToMap()" showWhen="android, ios" full >Ir para o mapa</button>
-  <button (click)="goToMapCore()" full >Ir para o mapa</button>
+  <button (click)="goToMap()" showWhen="android, ios" full >Definir localização da ocorrência</button>
+  <!-- <button (click)="goToMapCore()" full >Definir localização da ocorrência</button> -->
   <button (click)="save()" full>Salvar</button>
     
     <ion-row>
