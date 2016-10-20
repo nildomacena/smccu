@@ -18,6 +18,7 @@ export class DenunciaPage {
   element:any;
   categorias: any;
   catSelected:any;
+  imagesRef: string[];
   images: string[];
   address = {
     numero: "",
@@ -29,6 +30,7 @@ export class DenunciaPage {
   }
 
   constructor(private platform: Platform, private nav:NavController, private viewController: ViewController, private fire: Fire) {
+    this.imagesRef = [];
     this.images = [];
   }
 
@@ -83,7 +85,6 @@ definePntRef(data){
   });
   this.nav.present(alert);
   alert.willUnload.next(console.log("Alert.data: ",alert.data));
-  //console.log("Saiu?: ", alert.didLeave);
 }
 goToMap(){
     let mapModal = Modal.create(MapPage);
@@ -178,7 +179,7 @@ goToMapCore(){
   //tira as fotos do local
   takePicture(){
     
-    if(this.images.length >= 4){
+    if(this.imagesRef.length >= 4){
       let alert = Alert.create({
           title: 'Número máximo de fotos atinginda',
           subTitle: 'Limite de 4 fotos por denúncia',
@@ -197,12 +198,15 @@ goToMapCore(){
     else{
       Camera.getPicture({
         sourceType: Camera.PictureSourceType.CAMERA,
-        destinationType: Camera.DestinationType.DATA_URL,
+        destinationType: Camera.DestinationType.FILE_URI,
         encodingType: Camera.EncodingType.JPEG,
+        saveToPhotoAlbum: true
       }).then((imageData) => {
-      this.images.push('data:image/jpeg;base64,' + imageData);
+        console.log("imageData: ",imageData);
+        this.images.push(imageData);
+        this.imagesRef.push(imageData);
       }, (err) => {
-        console.log(err);
+        console.log("Error: ",err);
       });
     }
   }
@@ -239,7 +243,9 @@ goToMapCore(){
         {
           text: 'Confirmar',
           handler: () => {
-            this.fire.saveDenuncia(this.denuncia)
+            this.fire.saveImages(this.images);
+            this.denuncia.setInformation(this.description, this.catSelected);
+            this.fire.saveDenuncia(this.denuncia);
           }
         }
       ]
@@ -272,5 +278,6 @@ goToMapCore(){
   }
   onRemoveImage(i:number){
     this.images.splice(i,1);
+    this.imagesRef.splice(i,1);
   }
 }

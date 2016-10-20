@@ -2,7 +2,7 @@
 declare var google:any;
 export class Denuncia{
     
-    constructor(private description?:string, private category?:string, private latitude?, private pntRef?:string, private longitude?, private address?, private photos?){
+    constructor(private description?:string, private category?:string, private latitude?, private pntRef?:string, private longitude?){
 
     }
 
@@ -29,4 +29,11 @@ export class Denuncia{
   save(denuncia){
     
   }
+
+  setInformation(description: string, category: string, images?: any[]){
+    this.description = description;
+    this.category = category;
+  }
+
+
 }

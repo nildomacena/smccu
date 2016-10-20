@@ -24,9 +24,9 @@
       <ion-textarea [(ngModel)]="address.enderecoFormatado" id="lblAddress" required ></ion-textarea>
     </ion-item>
     <ion-item>
-      <ion-label *ngIf="!catSelected" >Selecione a categoria</ion-label>
+      <ion-label>Selecione a categoria</ion-label>
       <ion-select #select [(ngModel)]="catSelected" >
-        <ion-option *ngFor= "let cat of categorias">{{cat.name}}</ion-option>
+        <ion-option *ngFor= "let cat of categorias" [value]="cat" >{{cat.name}}</ion-option>
       </ion-select>
     </ion-item>
   </ion-list>
@@ -37,23 +37,23 @@
   <button (click)="save()" full>Salvar</button>
     
     <ion-row>
-      <ion-col width-50 *ngIf="images[0]">
+      <ion-col width-50 *ngIf="imagesRef[0]">
           <button (click)="onRemoveImage(0)" small right clear><ion-icon name="close"></ion-icon></button>
-          <img [src]="images[0]">                
+          <img [src]="imagesRef[0]">                
       </ion-col>
-      <ion-col width-50 *ngIf="images[1]">
+      <ion-col width-50 *ngIf="imagesRef[1]">
           <button (click)="onRemoveImage(1)" small right clear><ion-icon name="close"></ion-icon></button>
-          <img [src]="images[1]">                
+          <img [src]="imagesRef[1]">                
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col width-50 *ngIf="images[2]">
+      <ion-col width-50 *ngIf="imagesRef[2]">
           <button (click)="onRemoveImage(2)" small right clear><ion-icon name="close"></ion-icon></button>
-          <img [src]="images[2]">                
+          <img [src]="imagesRef[2]">                
       </ion-col>
-      <ion-col width-50 *ngIf="images[3]">
+      <ion-col width-50 *ngIf="imagesRef[3]">
           <button (click)="onRemoveImage(3)" small right clear><ion-icon name="close"></ion-icon></button>
-          <img [src]="images[3]">                
+          <img [src]="imagesRef[3]">                
       </ion-col>
     </ion-row>
 </ion-content>
