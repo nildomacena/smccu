@@ -1,5 +1,5 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
-import { NavController, ViewController, Alert, AlertInputOptions ,  Modal, Platform } from 'ionic-angular';
+import { NavController, ViewController, Alert, AlertInputOptions, Loading,  Modal, Platform } from 'ionic-angular';
 import { Camera, Geolocation, Diagnostic} from 'ionic-native';
 import { MapPage } from '../map/map';
 import { Fire, Denuncia } from '../../util';
@@ -59,7 +59,6 @@ definePntRef(data){
       handler: () => {
         alert.dismiss().then(() => {
           if(alert.data.inputs[0].value){
-            console.log('entrou no if');
             this.denuncia.setPosition(data, alert.data.inputs[0].value);
             this.getAddress();
           }
@@ -84,7 +83,6 @@ definePntRef(data){
     }]
   });
   this.nav.present(alert);
-  alert.willUnload.next(console.log("Alert.data: ",alert.data));
 }
 goToMap(){
     let mapModal = Modal.create(MapPage);
@@ -202,7 +200,6 @@ goToMapCore(){
         encodingType: Camera.EncodingType.JPEG,
         saveToPhotoAlbum: true
       }).then((imageData) => {
-        console.log("imageData: ",imageData);
         this.images.push(imageData);
         this.imagesRef.push(imageData);
       }, (err) => {
@@ -243,9 +240,31 @@ goToMapCore(){
         {
           text: 'Confirmar',
           handler: () => {
-            this.fire.saveImages(this.images);
+            let loading = Loading.create({
+              content: 'Aguarde um momento, estamos enviando sua denúncia'
+            });
             this.denuncia.setInformation(this.description, this.catSelected);
-            this.fire.saveDenuncia(this.denuncia);
+            
+            this.nav.present(loading).then(() => {
+              this.fire.saveDenuncia(this.denuncia, this.images)
+                .then(dados => {
+                  console.log('retorno do saveDenuncia', dados);
+                  loading.dismiss();
+                });
+            });
+            loading.onDismiss(() => {
+              let alertSucess = Alert.create({
+                title: 'Denúncia registrada com sucesso',
+                enableBackdropDismiss: false,
+                buttons: [{
+                  text: 'OK',
+                  handler: () => {
+                    this.viewController.dismiss();
+                  } 
+                }]
+              });
+              this.nav.present(alertSucess);
+            });
           }
         }
       ]
@@ -253,13 +272,13 @@ goToMapCore(){
       this.nav.present(confirm);     
     }
   }
-
   //Caso todas as informações sejam preechidas corretamente essa função abre um alerta 
   //onde será possível para o usuário colocar seu email e receber alguma informação sobre a denúncia
-  alertSuccess(){
-    let alert = Alert.create({
+  /*alertSuccess(){
+    let alerta = Alert.create({
       title: 'Denúncia Registrada com sucesso',
       subTitle: 'Caso deseje receber o comprovante por email, digite-o no campo abaixo',
+      enableBackdropDismiss: false,
       inputs: [{
         type: 'email',
         name: 'email',
@@ -272,10 +291,10 @@ goToMapCore(){
             this.viewController.dismiss();
           } 
         }]
-     })
-     console.log(alert.data);
-    this.nav.present(alert);
-  }
+     });
+    this.nav.present(alerta);
+    console.log(alerta.data);
+  }*/
   onRemoveImage(i:number){
     this.images.splice(i,1);
     this.imagesRef.splice(i,1);
