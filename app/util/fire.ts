@@ -40,31 +40,39 @@ export class Fire {
 		let metadata = {
 			contentType: 'image/jpeg'
 		};
+		for (let i in images)
+			console.log('i',i);
 		for (let i in images){
+
 			imagePath[i] = images[i].substring(0, images[i].lastIndexOf('/')+1);
 			imageName[i] = images[i].substring(images[i].lastIndexOf('/')+1, images[i].length);
-			
-			promises.push(new Promise((resolve,reject) => {File.readAsArrayBuffer(imagePath[i],imageName[i])
-				.then(arrayBuffer => {
-					blob.push(new Blob([arrayBuffer], {type: 'image/jpeg'}));
-					task[i] = this.storageRef.child('images/'+chave+'/'+imageName[i]).put(blob[i],metadata);
-					if (task.length == images.length)
-						task[images.length - 1].on('state_changed', snapshot =>  
-							console.log((snapshot.bytesTransferred / snapshot.totalBytes) *100),
 
-							error => console.log('Error: ',error),
+			promises.push(new Promise((resolve,reject) => {
+				File.readAsArrayBuffer(imagePath[i],imageName[i])
+					.then(arrayBuffer => {
+						blob[i] = new Blob([arrayBuffer], {type: 'image/jpeg'});
+						setTimeout( () =>{ 
+							console.log('Blob[',i,']', blob[i]);
+							task[i] = this.storageRef.child('images/'+chave+'/'+imageName[i]).put(blob[i],metadata);
+							if (task.length == images.length)
+								task[i].on('state_changed', snapshot =>  
+									console.log((snapshot.bytesTransferred / snapshot.totalBytes) *100),
 
-							() =>  {
-									console.log('transferência completada');
-									completo = true;
-									resolve(true);							
-							}
-						)
-				})
-				.catch(error => console.log('Erro: ',error));
+									error => console.log('Error: ',error),
+
+									() =>  {
+											console.log('transferência completada');
+											completo = true;
+											resolve(true);							
+									}
+								)
+						},500);
+					})
+					.catch(error => console.log('Erro: ',error));
 				})	
-				) 		 		
+			) 		 		
 		}
+		Promise.all(promises).then(dados => console.log('Promise.all: ', dados));
 		return Promise.all(promises).then(dados => true);
 		/*
 		imagePath[0] = images[0].substring(0, images[0].lastIndexOf('/')+1);

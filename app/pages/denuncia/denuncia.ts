@@ -253,17 +253,24 @@ goToMapCore(){
                 });
             });
             loading.onDismiss(() => {
-              let alertSucess = Alert.create({
-                title: 'Denúncia registrada com sucesso',
+              let alertSuccess = Alert.create({
+                title: 'Denúncia Registrada com sucesso',
+                subTitle: 'Caso deseje receber o comprovante por email, digite-o no campo abaixo',
                 enableBackdropDismiss: false,
-                buttons: [{
-                  text: 'OK',
-                  handler: () => {
-                    this.viewController.dismiss();
-                  } 
-                }]
+                inputs: [{
+                  type: 'email',
+                  name: 'email',
+                  placeholder: 'Email'  
+                }],
+                buttons: [
+                  {
+                    text: 'OK',
+                    handler: () => {
+                      this.viewController.dismiss();
+                    } 
+                  }]
               });
-              this.nav.present(alertSucess);
+              this.nav.present(alertSuccess);
             });
           }
         }
