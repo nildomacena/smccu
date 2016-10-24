@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Modal, NavController} from 'ionic-angular';
+import {Modal, NavController, Toast} from 'ionic-angular';
 import {MapPage} from '../map/map'
 import {DenunciaPage} from '../denuncia';
 
@@ -20,5 +20,18 @@ export class HomePage {
   openDenuncia(){
     let denunciaModal = Modal.create(DenunciaPage);
     this.nav.present(denunciaModal);
+    denunciaModal.onDismiss(data => {
+      if(data.saved)
+        this.presentToast();
+    })
+  }
+
+  presentToast(){
+    let toast = Toast.create({
+      message: 'Denúncia registrada com sucesso',
+      duration: 3000,
+      position: 'top'
+    });
+    this.nav.present(toast);
   }
 }

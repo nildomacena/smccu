@@ -266,7 +266,7 @@ goToMapCore(){
                   {
                     text: 'OK',
                     handler: () => {
-                      this.viewController.dismiss();
+                      this.viewController.dismiss({saved: true});
                     } 
                   }]
               });
